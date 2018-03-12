@@ -11,27 +11,37 @@
 # docker run --rm -v "$MATLAB_ROOT":/usr/local/MATLAB/from-host -v "$MATLAB_LOGS":/var/log/matlab --mac-address="$MATLAB_MAC_ADDRESS" ninjaben/matlab-support
 #
 # Launch Matlab and print version info:
-# docker run --rm -v "$MATLAB_ROOT":/usr/local/MATLAB/from-host -v "$MATLAB_LOGS":/var/log/matlab --mac-address="$MATLAB_MAC_ADDRESS" ninjaben/matlab-support -r "version,exit;"
-#
-# Plot a figure and save it as a png in the logs folder:
-# docker run --rm -v "$MATLAB_ROOT":/usr/local/MATLAB/from-host -v "$MATLAB_LOGS":/var/log/matlab --mac-address="$MATLAB_MAC_ADDRESS" ninjaben/matlab-support -r "plot(1:10);print('/var/log/matlab/figure.png', '-dpng');exit;"
-#
-#Thanks to Michael Perry at Stanford for info, inspiration, starter code!
-#
 
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 
-MAINTAINER Ben Heasly <benjamin.heasly@gmail.com>
+MAINTAINER Giles Greenway <augeas@gmail.com>
+
+RUN  echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" \
+    | debconf-set-selections && \
+    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" > \
+    /etc/apt/sources.list.d/webupd8team-java-trusty.list && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends oracle-java8-installer \
+    oracle-java8-set-default 
 
 # Matlab dependencies
-RUN apt-get update && apt-get install -y \
-    libpng12-dev libfreetype6-dev \
-    libblas-dev liblapack-dev gfortran build-essential xorg
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    libpng12-dev \
+    libfreetype6-dev \
+    libblas-dev \
+    liblapack-dev \
+    gfortran \
+    build-essential \
+    libgl1-mesa-glx \
+    xorg
+
+ENV MATLAB_JAVA=/usr/lib/jvm/java-8-oracle/jre/
 
 # run the container like a matlab executable 
 ENV PATH="/usr/local/MATLAB/from-host/bin:${PATH}"
-ENTRYPOINT ["matlab", "-logfile /var/log/matlab/matlab.log"]
+#ENTRYPOINT ["matlab", "-logfile /var/log/matlab/matlab.log"]
 
 # default to matlab help
-CMD ["-h"]
+CMD ["matlab","-nodesktop"]
 
