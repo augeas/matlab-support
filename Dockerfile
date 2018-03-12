@@ -8,6 +8,7 @@ FROM ubuntu:16.04
 
 MAINTAINER Giles Greenway <augeas@gmail.com>
 
+# Oracle Java, gratefully stolen from mlaccetti: https://hub.docker.com/r/mlaccetti/docker-oracle-java8-ubuntu-16.04/y
 RUN  echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" \
     | debconf-set-selections && \
     echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" > \
