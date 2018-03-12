@@ -12,6 +12,6 @@ will do all of this. The image is now based on Ubuntu Xenial, and comes with an 
 
 By default, "run.sh" will launch Matlab with the "-nodesktop" option. 
 
-
+Any argument passed to run.sh will be passed to matlab.
 
 
