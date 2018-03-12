@@ -1,16 +1,8 @@
-# ninjaben/matlab-support
+# augeas/matlab-support
 # 
 # Create an image with enough dependencies to support a mounted-in matlab.
 #
-# These expect you to define some local information:
-# - `MATLAB_ROOT` is your matlab installation on the Docker host, perhaps `/usr/local/MATLAB/R2016a`.
-# - `MATLAB_LOGS` is optional path on the Docker host to receive Matlab logs, perhaps `~/matlab-logs`.
-# - `MATLAB_MAC_ADDRESS` is the MAC address associated with your own Matlab License, of the form `00:00:00:00:00:00`.
-#
-# Print Matlab command help:
-# docker run --rm -v "$MATLAB_ROOT":/usr/local/MATLAB/from-host -v "$MATLAB_LOGS":/var/log/matlab --mac-address="$MATLAB_MAC_ADDRESS" ninjaben/matlab-support
-#
-# Launch Matlab and print version info:
+# Gratefully stolen from Benjamin Heasly: https://github.com/benjamin-heasly/matlab-support/
 
 FROM ubuntu:16.04
 
@@ -38,10 +30,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 ENV MATLAB_JAVA=/usr/lib/jvm/java-8-oracle/jre/
 
-# run the container like a matlab executable 
 ENV PATH="/usr/local/MATLAB/from-host/bin:${PATH}"
-#ENTRYPOINT ["matlab", "-logfile /var/log/matlab/matlab.log"]
 
-# default to matlab help
+# default to matlab with no desktop:
 CMD ["matlab","-nodesktop"]
 
